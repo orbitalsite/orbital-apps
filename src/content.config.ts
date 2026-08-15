@@ -37,35 +37,11 @@ const productSchema = z.object({
   }),
 });
 
-const articleSchema = z.object({
-  id: z.string(),
-  slug: z.string(),
-  cover: z.string(),
-  author: z.string(),
-  publishedAt: z.date(),
-  category: z.string(),
-  featured: z.boolean(),
-  translations: z.object({
-    ar: z.object({
-      title: z.string(),
-      excerpt: z.string(),
-      content: z.string(),
-    }),
-    en: z.object({
-      title: z.string(),
-      excerpt: z.string(),
-      content: z.string(),
-    }),
-  }),
-});
+
 
 export const collections = {
   products: defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/products' }),
     schema: productSchema,
-  }),
-  articles: defineCollection({
-    loader: glob({ pattern: '**/*.md', base: './src/content/articles' }),
-    schema: articleSchema,
   }),
 };

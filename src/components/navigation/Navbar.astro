@@ -26,7 +26,7 @@ const currentPath = Astro.url.pathname;
     <!-- Logo -->
     <a href={`${base.replace(/\/$/, '')}${getLocalizedPath(lang, '/')}`} class="navbar__logo" aria-label="ORBITAL">
       <img
-        src={`${base}images/hlogo.png`}
+        src={`${base.replace(/\/$/, '')}/images/hlogo.png`}
         alt="ORBITAL"
         width="50"
         height="50"
