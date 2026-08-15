@@ -4,5 +4,5 @@
  * Redirects to the default language (Arabic).
  */
 const base = import.meta.env.BASE_URL;
-return Astro.redirect(`${base}ar/`);
+return Astro.redirect(`${base.replace(/\/$/, '')}/ar/`);
 ---
