@@ -1,0 +1,97 @@
+---
+import type { Lang } from '@i18n/languages';
+import { getLocalizedPath, useTranslations } from '@i18n/index';
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+export interface Props {
+  items: BreadcrumbItem[];
+  lang: Lang;
+  class?: string;
+}
+
+const { items, lang, class: className = '' } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+---
+
+<nav aria-label="breadcrumb" class:list={['breadcrumb', className]}>
+  <ol>
+    <li>
+      <a href={getLocalizedPath('/', lang)} class="breadcrumb-link">
+        {t('nav.home')}
+      </a>
+    </li>
+    
+    {items.map((item, index) => {
+      const isLast = index === items.length - 1;
+      return (
+        <li class="separator" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </li>
+        <li>
+          {isLast || !item.href ? (
+            <span class="breadcrumb-current" aria-current="page">{item.label}</span>
+          ) : (
+            <a href={getLocalizedPath(item.href, lang)} class="breadcrumb-link">{item.label}</a>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb {
+    font-size: var(--font-size-sm);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .breadcrumb li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .breadcrumb-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--color-primary);
+  }
+
+  .breadcrumb-current {
+    color: var(--color-text);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .separator {
+    color: var(--color-border);
+    margin-inline: var(--space-2);
+  }
+
+  .chevron {
+    width: 1em;
+    height: 1em;
+  }
+
+  /* RTL Support for Chevron */
+  :global([dir="rtl"]) .chevron {
+    transform: scaleX(-1);
+  }
+</style>

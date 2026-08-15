@@ -1,0 +1,66 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  align?: 'center' | 'start';
+  tag?: string;
+  class?: string;
+}
+
+const { title, description, align = 'center', tag, class: className = '' } = Astro.props;
+---
+
+<div class:list={['section-header', `align-${align}`, className]} data-animate="up">
+  {tag && <span class="tag">{tag}</span>}
+  <h2 class="title">{title}</h2>
+  {description && <p class="description">{description}</p>}
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-block-end: var(--space-8);
+    max-width: 800px;
+  }
+
+  .align-center {
+    align-items: center;
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .align-start {
+    align-items: flex-start;
+    text-align: start;
+  }
+
+  .tag {
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .title {
+    font-size: var(--font-size-3xl);
+    line-height: 1.2;
+    margin: 0;
+    color: var(--color-heading);
+  }
+
+  .description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 600px;
+  }
+
+  @media (min-width: 768px) {
+    .title {
+      font-size: var(--font-size-4xl);
+    }
+  }
+</style>

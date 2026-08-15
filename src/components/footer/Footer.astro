@@ -1,0 +1,215 @@
+---
+import { useTranslations, getLocalizedPath } from '@i18n/index';
+import type { Lang } from '@i18n/languages';
+import { siteConfig } from '@data/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+
+// Helper to build URLs
+const getUrl = (path: string) => `${base.replace(/\/$/, '')}${getLocalizedPath(lang, path)}`;
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-main">
+      <div class="footer-col brand-col">
+        <a href={getUrl('/')} class="footer-logo">
+          <img src={`${base.replace(/\/$/, '')}/images/hlogo.png`} alt="ORBITAL Logo" />
+          <span>{siteConfig.name || 'ORBITAL'}</span>
+        </a>
+        <p class="footer-desc">
+          {t('footer.description') || 'Building next-generation digital solutions for a connected world.'}
+        </p>
+      </div>
+      
+      <div class="footer-col">
+        <h3 class="footer-heading">{t('footer.products') || 'Products'}</h3>
+        <ul class="footer-links">
+          <li><a href={getUrl('/programs/clinic-system')}>برنامج العيادة الطبية</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3 class="footer-heading">{t('footer.company') || 'Company'}</h3>
+        <ul class="footer-links">
+          <li><a href={getUrl('/about')}>{t('nav.about') || 'About Us'}</a></li>
+          <li><a href={getUrl('/services')}>{t('nav.services') || 'Services'}</a></li>
+          <li><a href={getUrl('/news')}>{t('nav.news') || 'News'}</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3 class="footer-heading">{t('nav.contact') || 'Contact'}</h3>
+        <ul class="footer-links">
+          <li><a href={getUrl('/contact')}>{t('nav.contact') || 'Contact Us'}</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; {currentYear} {siteConfig.name || 'ORBITAL'}. {t('footer.allRightsReserved') || 'All rights reserved.'}
+      </p>
+      <div class="social-links">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+        </a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+          </svg>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-background-alt);
+    border-block-start: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding-block-start: var(--space-3xl, 4rem);
+    padding-block-end: var(--space-xl, 2rem);
+  }
+
+  .footer-container {
+    max-width: var(--container-max-width, 1200px);
+    margin-inline: auto;
+    padding-inline: var(--space-lg, 1.5rem);
+  }
+
+  .footer-main {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: var(--space-2xl, 3rem);
+    margin-block-end: var(--space-3xl, 4rem);
+  }
+
+  @media (min-width: 768px) {
+    .footer-main {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-main {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+  }
+
+  .brand-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md, 1rem);
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm, 0.5rem);
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: var(--font-size-xl, 1.25rem);
+    font-weight: 700;
+  }
+
+  .footer-logo img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .footer-desc {
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0;
+  }
+
+  .footer-heading {
+    font-size: var(--font-size-lg, 1.125rem);
+    font-weight: 600;
+    margin-block-start: 0;
+    margin-block-end: var(--space-md, 1.25rem);
+    color: var(--color-text);
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm, 0.75rem);
+  }
+
+  .footer-links a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-links a:hover,
+  .footer-links a:focus {
+    color: var(--color-primary-light);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md, 1rem);
+    padding-block-start: var(--space-xl, 2rem);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 768px) {
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  .copyright {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+
+  .social-links {
+    display: flex;
+    gap: var(--space-md, 1rem);
+  }
+
+  .social-links a {
+    color: var(--color-text-muted);
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .social-links a:hover,
+  .social-links a:focus {
+    color: var(--color-primary-light);
+    transform: translateY(-2px);
+  }
+</style>

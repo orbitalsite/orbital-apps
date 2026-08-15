@@ -1,0 +1,53 @@
+---
+/**
+ * ORBITAL — Main Layout
+ * Base HTML document wrapper with theme, lang, RTL/LTR support.
+ * Default theme: 'dark'.
+ */
+import SEOHead from '@components/seo/SEOHead.astro';
+import { getLanguageDir, type Lang } from '@i18n/languages';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  canonicalPath?: string;
+  ogImage?: string;
+  type?: 'website' | 'article';
+  publishedAt?: string;
+}
+
+const { title, description, lang, canonicalPath, ogImage, type, publishedAt } = Astro.props;
+const dir = getLanguageDir(lang);
+---
+
+<!DOCTYPE html>
+<html lang={lang} dir={dir} data-theme="dark">
+  <head>
+    <SEOHead
+      title={title}
+      description={description}
+      lang={lang}
+      canonicalPath={canonicalPath}
+      ogImage={ogImage}
+      type={type}
+      publishedAt={publishedAt}
+    />
+
+    <!-- Prevent theme flash — runs before paint. Default is always 'dark' -->
+    <script is:inline>
+      (function() {
+        var theme = localStorage.getItem('orbital-theme');
+        if (!theme || (theme !== 'light' && theme !== 'dark')) {
+          theme = 'dark';
+          localStorage.setItem('orbital-theme', 'dark');
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

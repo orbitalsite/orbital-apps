@@ -1,0 +1,36 @@
+---
+/**
+ * ORBITAL — Homepage
+ * Clean, high-converting landing page focusing on core strengths & services.
+ */
+import PageLayout from '@layouts/PageLayout.astro';
+import Hero from '@components/hero/Hero.astro';
+import TrustSection from '@components/sections/TrustSection.astro';
+import ServicesPreview from '@components/sections/ServicesPreview.astro';
+import WhyOrbital from '@components/sections/WhyOrbital.astro';
+import CTASection from '@components/sections/CTASection.astro';
+import { useTranslations } from '@i18n/index';
+import { languages, type Lang } from '@i18n/languages';
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+---
+
+<PageLayout
+  title={`${t('site.name')} — ${t('site.tagline')}`}
+  description={t('site.description')}
+  lang={lang}
+  canonicalPath="/"
+>
+  <Hero lang={lang} />
+  <TrustSection lang={lang} />
+  <ServicesPreview lang={lang} />
+  <WhyOrbital lang={lang} />
+  <CTASection lang={lang} />
+</PageLayout>

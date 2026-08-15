@@ -1,0 +1,153 @@
+---
+/**
+ * ORBITAL — Latest Releases Section
+ * Shows recent product updates and articles.
+ */
+import { useTranslations, getLocalizedPath } from '@i18n/index';
+import type { Lang } from '@i18n/languages';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+
+const articles = await getCollection('articles');
+const recent = articles
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 3);
+---
+
+<section class="section latest-releases" id="latest-releases">
+  <div class="container">
+    <div class="latest-releases__header" data-animate="up">
+      <span class="latest-releases__tag tracking-widest">{t('sections.releases.title')}</span>
+      <h2 class="heading-2">{t('sections.releases.title')}</h2>
+      <p class="text-lg text-muted">{t('sections.releases.description')}</p>
+    </div>
+
+    <div class="latest-releases__list" data-stagger-group>
+      {recent.map((article) => {
+        const tr = article.data.translations[lang as keyof typeof article.data.translations];
+        const dateStr = article.data.publishedAt.toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        });
+        return (
+          <a 
+            href={`${base.replace(/\/$/, '')}${getLocalizedPath(lang, `/news/${article.data.slug}/`)}`}
+            class="release-item"
+            data-stagger-item
+          >
+            <div class="release-item__date">
+              <time datetime={article.data.publishedAt.toISOString()}>{dateStr}</time>
+            </div>
+            <div class="release-item__content">
+              <h3 class="release-item__title">{tr.title}</h3>
+              <p class="release-item__excerpt line-clamp-2">{tr.excerpt}</p>
+            </div>
+            <div class="release-item__arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .latest-releases__header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+
+  .latest-releases__tag {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    color: var(--color-primary-light);
+    margin-bottom: var(--space-4);
+  }
+
+  .latest-releases__header h2 { margin-bottom: var(--space-4); }
+  .latest-releases__header p { max-width: 560px; margin-inline: auto; }
+
+  .latest-releases__list {
+    max-width: 800px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .release-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-5) var(--space-6);
+    text-decoration: none;
+    color: var(--color-text);
+    border-radius: var(--radius-lg);
+    transition: background-color var(--transition-fast);
+    border: 1px solid transparent;
+  }
+
+  .release-item:hover {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+
+  .release-item__date {
+    flex-shrink: 0;
+    min-width: 140px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  .release-item__content { flex: 1; min-width: 0; }
+
+  .release-item__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-1);
+  }
+
+  .release-item__excerpt {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-normal);
+  }
+
+  .release-item__arrow {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+  }
+
+  [dir="rtl"] .release-item__arrow svg { transform: scaleX(-1); }
+
+  .release-item:hover .release-item__arrow {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+
+  [dir="rtl"] .release-item:hover .release-item__arrow {
+    transform: translateX(-4px);
+  }
+
+  @media (max-width: 768px) {
+    .release-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+    .release-item__date { min-width: auto; }
+    .release-item__arrow { display: none; }
+  }
+</style>

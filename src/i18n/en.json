@@ -1,0 +1,230 @@
+{
+  "site": {
+    "name": "ORBITAL",
+    "tagline": "Programming, Technical & Engineering Solutions",
+    "description": "ORBITAL builds high-performance, robust software solutions. Specializing in advanced systems, automation, and enterprise web applications."
+  },
+  "nav": {
+    "home": "Home",
+    "programs": "Programs",
+    "services": "Services",
+    "projects": "Projects",
+    "about": "About",
+    "support": "Support",
+    "contact": "Contact",
+    "news": "News"
+  },
+  "hero": {
+    "title": "Programming, Technical & Engineering Solutions",
+    "subtitle": "We engineer robust, scalable software systems designed for high performance and reliability.",
+    "cta_programs": "View Programs",
+    "cta_about": "About Us"
+  },
+  "sections": {
+    "trust": { 
+      "title": "Trusted By", 
+      "statement": "We engineer integrated software & hardware systems using cutting-edge tech to help businesses reach digital excellence." 
+    },
+    "services": { 
+      "tag": "", 
+      "title": "Technical & Engineering Services", 
+      "description": "Comprehensive software & hardware engineering solutions including microcontroller programming, enterprise systems, free software, and multi-party integration.", 
+      "viewAll": "View All Services" 
+    },
+    "products": { "title": "Our Products", "description": "Ready-to-use software solutions.", "viewAll": "View All Products" },
+    "whyOrbital": {
+      "tag": "Why Choose ORBITAL?",
+      "title": "Your Technical Partner for Digital Success",
+      "description": "We craft integrated software solutions combining ultimate precision, extraordinary performance, and uncompromised security to scale your business.",
+      "precision": {
+        "title": "Precision Engineering & Solutions",
+        "description": "We design and build high-quality custom software systems tailored specifically to execute your business workflows with max efficiency."
+      },
+      "performance": {
+        "title": "High Performance & Speed",
+        "description": "We leverage cutting-edge architecture to ensure lightning-fast processing and zero-downtime reliability under heavy load."
+      },
+      "security": {
+        "title": "Enterprise-Grade Security",
+        "description": "We apply stringent cybersecurity standards and advanced encryption to protect your digital assets and secure your infrastructure."
+      },
+      "innovation": {
+        "title": "Continuous Innovation & Growth",
+        "description": "We stay ahead of tech shifts to deliver future-proof, scalable software solutions that keep you miles ahead of competition."
+      }
+    },
+    "projects": { "title": "Featured Projects", "description": "Recent engineering challenges we've solved.", "viewAll": "View All Projects" },
+    "tech": { "title": "Technology Stack", "description": "The tools and frameworks we use to build reliable systems." },
+    "releases": { "title": "Latest Releases", "description": "Recent updates and software versions." },
+    "cta": { "title": "Ready to build?", "description": "Let's discuss your technical requirements.", "button": "Contact Engineering Team" }
+  },
+  "programs": {
+    "title": "Free Software & Tools",
+    "description": "Proprietary software tools and applications available 100% free for everyone to download and use.",
+    "search": "Search programs...",
+    "filter": { "all": "All", "free": "Free", "category": "Category", "platform": "Platform" },
+    "version": "Version",
+    "download": "Free Download",
+    "viewDetails": "View Details",
+    "free": "100% Free",
+    "paid": "Commercial",
+    "features": "Key Features",
+    "requirements": "System Requirements",
+    "screenshots": "Screenshots",
+    "changelog": "Changelog",
+    "releaseDate": "Release Date",
+    "size": "Size",
+    "platform": "Platform",
+    "noResults": "No programs found matching your criteria."
+  },
+  "services": {
+    "title": "Technical & Engineering Services",
+    "description": "Comprehensive software & hardware engineering solutions including microcontroller programming, enterprise systems, free software, and multi-party integration.",
+    "items": {
+      "microcontroller": { "title": "Microcontroller & Embedded Systems", "description": "High-precision firmware & microcontroller programming for smart hardware, sensors, and IoT devices." },
+      "systems": { "title": "Large-Scale Enterprise Systems", "description": "Architecting massive, high-concurrency enterprise software systems to automate and power large business operations." },
+      "freesoftware": { "title": "Free Software & Desktop Applications", "description": "Developing high-performance, standalone free desktop software and apps accessible to all users and organizations." },
+      "analytics": { "title": "Data Analytics & Intelligence", "description": "Processing and analyzing complex data streams with intelligent dashboards to empower decision-making." },
+      "integration": { "title": "Multi-Party System Integration", "description": "Building custom API bridges and platforms that unite multiple disparate software systems into one seamless ecosystem." },
+      "engineering": { "title": "Advanced Engineering Solutions", "description": "Expert technical consulting and architectural system design engineered for speed, safety, and continuous growth." }
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Case studies and successful technical implementations.",
+    "viewProject": "View Project",
+    "overview": "Overview",
+    "problem": "The Challenge",
+    "solution": "Our Solution",
+    "technologies": "Technologies Used",
+    "results": "Results"
+  },
+  "about": {
+    "title": "About ORBITAL",
+    "subtitle": "At ORBITAL, we build software around business needs, not the other way around.",
+    "whoWeAre": {
+      "title": "Who We Are",
+      "tagline": "At ORBITAL, we build software around business needs, not the other way around.",
+      "p1": "ORBITAL started with a simple vision: to ensure that every business owner — from retail stores and pharmacies to hotels and warehouses — receives professional, reliable management systems without exorbitant costs or unnecessary complexity.",
+      "p2": "We engineer practical software solutions that empower business owners to run their daily operations efficiently through products combining ease of use, technical strength, and flexibility."
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "We noticed that many small and medium enterprises in Iraq and the region face a clear challenge: either expensive, over-complex global software, or limited local tools that fall short of modern operational demands.",
+      "p2": "That is where ORBITAL began.",
+      "p3": "We decided to build an ecosystem of specialized software combining simple user experience with reliable engineering, focusing directly on real business needs and local market realities.",
+      "p4": "From POS and inventory control to accounting and hotel management, we build solutions that make technology straightforward and accessible to every business owner."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "p1": "To empower business owners to run their operations with maximum efficiency through practical, dependable software.",
+      "p2": "We develop industry-tailored systems with a relentless focus on performance, usability, and seamless integration, ensuring clients receive a coherent tech experience instead of fragmented, complex tools."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "p1": "To build one of the most trusted business software ecosystems in Iraq and the Arab region.",
+      "p2": "We aim for ORBITAL to be the go-to platform relied upon by small business owners and growing enterprises alike, continuously evolving alongside our clients' ambitions."
+    },
+    "features": {
+      "title": "What Makes ORBITAL Unique",
+      "items": {
+        "ecosystem": {
+          "title": "Interconnected Ecosystem",
+          "description": "Our products are designed to work seamlessly within a unified ecosystem, making software management clear and effortless."
+        },
+        "tailored": {
+          "title": "Industry-Specific Solutions",
+          "description": "We craft tailored tools accommodating the exact workflows of diverse sectors, such as retail, pharmacies, hotels, and warehouses."
+        },
+        "accessibility": {
+          "title": "Flexible Access",
+          "description": "We offer free software with essential features alongside advanced options for businesses requiring enterprise capabilities."
+        },
+        "support": {
+          "title": "Support That Understands You",
+          "description": "We believe a great product doesn't end at installation; we are dedicated to ongoing support and solving real operational challenges."
+        }
+      }
+    },
+    "values": {
+      "title": "Our Core Values",
+      "items": {
+        "transparency": {
+          "title": "Transparency",
+          "description": "We build clear, honest relationships with our clients — from product capabilities and pricing to ongoing support."
+        },
+        "innovation": {
+          "title": "Continuous Innovation",
+          "description": "We constantly upgrade our products to stay aligned with evolving business needs and technological advancements."
+        },
+        "quality": {
+          "title": "Commitment to Quality",
+          "description": "We rigorously test and refine our software to deliver maximum stability, security, and reliability."
+        }
+      }
+    }
+  },
+  "support": {
+    "title": "Support Center",
+    "description": "Documentation, troubleshooting, and technical assistance.",
+    "search": "Search documentation...",
+    "faq": { "title": "Frequently Asked Questions" },
+    "installation": { "title": "Installation Guides" },
+    "troubleshooting": { "title": "Troubleshooting" },
+    "contactSupport": "Contact Support Team"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "Get in touch directly with our engineering team across our official platforms.",
+    "email": "Email Address",
+    "emailDesc": "Send us an email anytime for inquiries, consultations, and software requests.",
+    "phone": "Phone Number",
+    "phoneDesc": "Our team is available to respond directly to your calls and inquiries.",
+    "facebook": "Facebook",
+    "facebookDesc": "Follow our official Facebook page for the latest updates and announcements.",
+    "instagram": "Instagram",
+    "instagramDesc": "Explore behind-the-scenes engineering and product showcases on Instagram.",
+    "tiktok": "TikTok",
+    "tiktokDesc": "Quick tech content and software feature walkthroughs on TikTok.",
+    "youtube": "YouTube",
+    "youtubeDesc": "Subscribe to our YouTube channel for video tutorials and software demos.",
+    "info": "Contact Information",
+    "visitSocial": "Visit Page"
+  },
+  "news": {
+    "title": "Engineering Blog & News",
+    "description": "Technical insights, updates, and company news.",
+    "readMore": "Read Full Article",
+    "publishedAt": "Published on"
+  },
+  "footer": {
+    "description": "Programming, Technical & Engineering Solutions.",
+    "products": "Products",
+    "company": "Company",
+    "support": "Support",
+    "languages": "Languages",
+    "copyright": "Copyright",
+    "allRightsReserved": "All rights reserved."
+  },
+  "common": {
+    "learnMore": "Learn More",
+    "goBack": "Go Back",
+    "home": "Home",
+    "loading": "Loading...",
+    "error": "An error occurred.",
+    "notFound": { "title": "404 - Not Found", "description": "The requested resource was not found.", "goHome": "Go Home" },
+    "breadcrumb": { "home": "Home" }
+  },
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "toggle": "Toggle Theme"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "openMenu": "Open main menu",
+    "closeMenu": "Close main menu",
+    "switchLanguage": "Switch language",
+    "toggleTheme": "Toggle color theme"
+  }
+}

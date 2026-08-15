@@ -1,0 +1,404 @@
+---
+/**
+ * ORBITAL — Navbar
+ * Professional navigation with language selector, theme toggle, and mobile menu.
+ * Fully responsive: Desktop (>900px), Tablet (768-900px), Mobile (<768px).
+ */
+import { useTranslations, getLocalizedPath } from '@i18n/index';
+import { languages, type Lang } from '@i18n/languages';
+import { mainNavigation } from '@data/navigation';
+import { siteConfig } from '@data/site';
+import ThemeSwitcher from './ThemeSwitcher.astro';
+import LanguageSelector from './LanguageSelector.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+---
+
+<header class="navbar" id="navbar">
+  <div class="navbar__container">
+    <!-- Logo -->
+    <a href={`${base.replace(/\/$/, '')}${getLocalizedPath(lang, '/')}`} class="navbar__logo" aria-label="ORBITAL">
+      <img
+        src={`${base}images/hlogo.png`}
+        alt="ORBITAL"
+        width="50"
+        height="50"
+        class="navbar__logo-icon"
+      />
+      <span class="navbar__logo-text">ORBITAL</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="navbar__nav" aria-label={t('a11y.skipToContent')}>
+      <ul class="navbar__links">
+        {mainNavigation.map((item) => {
+          const href = getLocalizedPath(lang, item.path);
+          const isActive = currentPath.includes(item.path) && item.path !== '/' 
+            || (item.path === '/' && currentPath.endsWith(`/${lang}/`));
+          return (
+            <li>
+              <a 
+                href={`${base.replace(/\/$/, '')}${href}`} 
+                class:list={['navbar__link', { 'is-active': isActive }]}
+              >
+                {t(`nav.${item.key}`)}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+
+    <!-- Actions (always visible) -->
+    <div class="navbar__actions">
+      <LanguageSelector lang={lang} />
+      <ThemeSwitcher lang={lang} />
+      
+      <!-- Mobile Menu Toggle Button -->
+      <button 
+        class="navbar__mobile-toggle" 
+        id="mobile-menu-toggle" 
+        aria-label={t('a11y.openMenu')}
+        aria-expanded="false"
+        type="button"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="menu-icon">
+          <line x1="4" x2="20" y1="12" y2="12"></line>
+          <line x1="4" x2="20" y1="6" y2="6"></line>
+          <line x1="4" x2="20" y1="18" y2="18"></line>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="close-icon hidden">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="navbar__mobile-menu" id="mobile-menu">
+    <ul class="navbar__mobile-links">
+      {mainNavigation.map((item) => {
+        const href = getLocalizedPath(lang, item.path);
+        return (
+          <li>
+            <a 
+              href={`${base.replace(/\/$/, '')}${href}`}
+              class="navbar__mobile-link"
+            >
+              {t(`nav.${item.key}`)}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</header>
+
+<script>
+  // Mobile Menu Logic
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = toggleBtn?.querySelector('.menu-icon');
+  const closeIcon = toggleBtn?.querySelector('.close-icon');
+
+  function closeMobileMenu() {
+    toggleBtn?.setAttribute('aria-expanded', 'false');
+    mobileMenu?.classList.remove('is-active');
+    menuIcon?.classList.remove('hidden');
+    closeIcon?.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function openMobileMenu() {
+    toggleBtn?.setAttribute('aria-expanded', 'true');
+    mobileMenu?.classList.add('is-active');
+    menuIcon?.classList.add('hidden');
+    closeIcon?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  toggleBtn?.addEventListener('click', () => {
+    const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+    if (isExpanded) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  });
+
+  // Close mobile menu when clicking a link
+  mobileMenu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  // Close mobile menu when resizing past breakpoint
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) {
+      closeMobileMenu();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMobileMenu();
+    }
+  });
+
+  // Sticky navbar shadow on scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      navbar?.classList.add('is-scrolled');
+    } else {
+      navbar?.classList.remove('is-scrolled');
+    }
+  }, { passive: true });
+</script>
+
+<style>
+  /* ── Base Navbar ── */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: var(--space-3) var(--space-6);
+    background-color: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+  }
+
+  .navbar.is-scrolled {
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    padding-block: var(--space-2);
+  }
+
+  /* ── Container ── */
+  .navbar__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    gap: var(--space-4);
+  }
+
+  /* ── Logo ── */
+  .navbar__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-decoration: none;
+    color: var(--color-text);
+    flex-shrink: 0;
+  }
+
+  .navbar__logo-icon {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .navbar__logo:hover .navbar__logo-icon {
+    transform: scale(1.05);
+  }
+
+  .navbar__logo-text {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-wider);
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-glow) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Desktop Nav Links ── */
+  .navbar__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: nowrap;
+  }
+
+  .navbar__link {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    transition: color 0.2s ease, background-color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .navbar__link:hover {
+    color: var(--color-primary-light);
+    background-color: var(--color-surface-hover);
+  }
+
+  .navbar__link.is-active {
+    color: var(--color-primary-light);
+    font-weight: var(--font-weight-bold);
+    background-color: rgba(59, 139, 235, 0.08);
+  }
+
+  /* ── Actions ── */
+  .navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  /* ── Mobile Toggle Button ── */
+  .navbar__mobile-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    padding: var(--space-2);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s ease;
+  }
+
+  .navbar__mobile-toggle:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* ── Mobile Menu Overlay ── */
+  .navbar__mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-background);
+    z-index: 999;
+    padding-top: 80px;
+    padding-inline: var(--space-6);
+    padding-bottom: var(--space-8);
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+
+  .navbar__mobile-menu.is-active {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .navbar__mobile-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .navbar__mobile-link {
+    display: block;
+    padding: var(--space-4) var(--space-5);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-lg);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .navbar__mobile-link:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-primary-light);
+  }
+
+  /* ══════════════════════════════════════════════
+     Responsive Breakpoints
+     ══════════════════════════════════════════════ */
+
+  /* Tablet: hide desktop nav, show mobile toggle */
+  @media (max-width: 900px) {
+    .navbar__nav {
+      display: none;
+    }
+    .navbar__mobile-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  /* Small tablets & large phones */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .navbar.is-scrolled {
+      padding-block: var(--space-2);
+    }
+
+    .navbar__logo-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .navbar__logo-text {
+      font-size: var(--font-size-base);
+    }
+  }
+
+  /* Small phones */
+  @media (max-width: 480px) {
+    .navbar {
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .navbar__logo-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .navbar__logo-text {
+      font-size: var(--font-size-sm);
+      letter-spacing: var(--letter-spacing-wide);
+    }
+
+    .navbar__actions {
+      gap: var(--space-1);
+    }
+
+    .navbar__mobile-link {
+      font-size: var(--font-size-base);
+      padding: var(--space-3) var(--space-4);
+    }
+  }
+</style>

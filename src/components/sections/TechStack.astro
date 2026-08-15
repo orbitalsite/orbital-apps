@@ -1,0 +1,91 @@
+---
+import type { Lang } from '@i18n/languages';
+import { useTranslations } from '@i18n/index';
+
+export interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const technologies = [
+  'Flutter',
+  'Laravel',
+  'Dart',
+  'Python',
+  'TypeScript',
+  'C++',
+  'SQLite',
+  'PostgreSQL'
+];
+---
+
+<section class="tech-stack section" data-animate="up">
+  <div class="container">
+    <div class="tech-content">
+      <h3 class="tech-title">{t('sections.tech.title') || 'Technologies We Use'}</h3>
+      
+      <div class="tech-list">
+        {technologies.map(tech => (
+          <div class="tech-pill">
+            <span class="tech-name">{tech}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tech-stack {
+    padding-block: var(--space-12);
+    background-color: var(--color-background);
+    border-block-start: 1px solid var(--color-border);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .tech-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .tech-title {
+    font-size: var(--font-size-xl);
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  .tech-pill {
+    padding: var(--space-2) var(--space-6);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+  }
+
+  .tech-pill:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light, rgba(59, 139, 235, 0.05));
+    transform: translateY(-2px);
+  }
+
+  .tech-name {
+    font-family: var(--font-family-mono, var(--font-family-sans));
+    font-weight: var(--font-weight-bold);
+    color: var(--color-heading);
+    font-size: var(--font-size-sm);
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+/**
+ * ORBITAL — OrbitalScene Astro Wrapper
+ * Renders the 3D WebGL scene for Homepage Hero ONLY.
+ * Includes elegant static SVG fallback if WebGL is unsupported.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['orbital-scene-wrapper', className]} id="orbital-scene-container">
+  <!-- WebGL Canvas Container -->
+  <div id="orbital-webgl-target" class="orbital-webgl-target"></div>
+
+  <!-- SVG Fallback (shown if WebGL is unsupported or fails) -->
+  <div id="orbital-svg-fallback" class="orbital-svg-fallback hidden" aria-hidden="true">
+    <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" class="orbital-svg-illustration">
+      <!-- Outer Orbit Ring -->
+      <ellipse cx="250" cy="250" rx="180" ry="60" stroke="var(--color-primary-light)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.4" transform="rotate(-25 250 250)" />
+      <!-- Inner Orbit Ring -->
+      <ellipse cx="250" cy="250" rx="140" ry="45" stroke="var(--color-glow)" stroke-width="2" opacity="0.6" transform="rotate(35 250 250)" />
+      <!-- Digital Core -->
+      <circle cx="250" cy="250" r="70" fill="url(#coreGlow)" opacity="0.2" />
+      <circle cx="250" cy="250" r="50" stroke="var(--color-primary-light)" stroke-width="2" stroke-dasharray="8 6" />
+      <circle cx="250" cy="250" r="25" fill="var(--color-glow)" opacity="0.8" />
+      <!-- Nodes -->
+      <circle cx="130" cy="200" r="6" fill="var(--color-glow)" />
+      <circle cx="360" cy="290" r="5" fill="var(--color-primary-light)" />
+      <circle cx="270" cy="120" r="4" fill="var(--color-glow)" />
+      <!-- Gradients -->
+      <defs>
+        <radialGradient id="coreGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(250 250) scale(70)">
+          <stop stop-color="var(--color-glow)" stop-opacity="0.8"/>
+          <stop offset="1" stop-color="var(--color-primary)" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+</div>
+
+<script>
+  import { OrbitalSceneManager } from '../../lib/three/orbitalSceneManager';
+
+  async function initHeroScene() {
+    const container = document.getElementById('orbital-webgl-target');
+    const fallback = document.getElementById('orbital-svg-fallback');
+    if (!container) return;
+
+    // Check WebGL support
+    if (!OrbitalSceneManager.isWebGLSupported()) {
+      fallback?.classList.remove('hidden');
+      return;
+    }
+
+    const theme = (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'dark';
+
+    try {
+      const manager = new OrbitalSceneManager({ container, theme });
+
+      // Clean up on Astro view transitions / page swap
+      document.addEventListener('astro:before-swap', () => {
+        manager.dispose();
+      }, { once: true });
+    } catch (err) {
+      console.warn('OrbitalScene WebGL init error, falling back to SVG:', err);
+      fallback?.classList.remove('hidden');
+    }
+  }
+
+  // Run init on DOM Ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroScene);
+  } else {
+    initHeroScene();
+  }
+</script>
+
+<style>
+  .orbital-scene-wrapper {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .orbital-webgl-target {
+    width: 100%;
+    height: 100%;
+  }
+
+  .orbital-webgl-target :global(canvas) {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    pointer-events: auto;
+  }
+
+  /* Fallback SVG styling */
+  .orbital-svg-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8);
+  }
+
+  .orbital-svg-illustration {
+    width: min(450px, 80vw);
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(59, 139, 235, 0.2));
+  }
+</style>

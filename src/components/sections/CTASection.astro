@@ -1,0 +1,95 @@
+---
+import type { Lang } from '@i18n/languages';
+import { useTranslations, getLocalizedPath } from '@i18n/index';
+import Button from '@components/ui/Button.astro';
+
+export interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="cta-section" data-animate="up">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-content">
+        <h2 class="title">{t('sections.cta.title') || 'Ready to start your next project?'}</h2>
+        <p class="description">{t('sections.cta.description') || 'Let\'s collaborate to build something extraordinary.'}</p>
+      </div>
+      <div class="cta-actions">
+        <Button href={getLocalizedPath('/programs', lang)} variant="primary" size="lg">
+          {t('sections.cta.button') || 'Get Started'}
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-inline: var(--space-6);
+  }
+
+  .cta-section {
+    padding-block: var(--space-16);
+    background-color: var(--color-background);
+  }
+
+  .cta-box {
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl, 24px);
+    padding: var(--space-8) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-8);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-glow, #4DC9F6));
+  }
+
+  .cta-content {
+    max-width: 600px;
+  }
+
+  .title {
+    font-size: var(--font-size-3xl);
+    color: var(--color-heading);
+    margin-top: 0;
+    margin-block-end: var(--space-4);
+  }
+
+  .description {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .cta-box {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: start;
+      padding: var(--space-12);
+    }
+
+    .cta-content {
+      margin-inline-end: var(--space-8);
+    }
+  }
+</style>

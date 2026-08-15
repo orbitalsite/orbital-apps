@@ -1,0 +1,225 @@
+---
+/**
+ * ORBITAL — Language Selector
+ * Dropdown for switching between AR, EN, FA.
+ */
+import { languages, type Lang } from '@i18n/languages';
+import { useTranslations } from '@i18n/index';
+
+interface Props {
+  lang: Lang;
+  variant?: 'default' | 'mobile';
+}
+
+const { lang, variant = 'default' } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+
+// Build language switch URLs by replacing the current lang prefix
+const currentPath = Astro.url.pathname;
+const pathWithoutBase = currentPath.replace(base.replace(/\/$/, ''), '');
+const pathSegments = pathWithoutBase.split('/').filter(Boolean);
+// Remove the language segment
+const pathAfterLang = pathSegments.length > 1 ? '/' + pathSegments.slice(1).join('/') + '/' : '/';
+
+const langEntries = Object.entries(languages) as [Lang, string][];
+---
+
+{variant === 'mobile' ? (
+  <div class="lang-selector-mobile">
+    <p class="lang-selector-mobile__label">{t('footer.languages')}</p>
+    <div class="lang-selector-mobile__list">
+      {langEntries.map(([code, name]) => (
+        <a
+          href={`${base.replace(/\/$/, '')}/${code}${pathAfterLang === '/' ? '/' : pathAfterLang}`}
+          class:list={['lang-selector-mobile__link', { 'is-active': code === lang }]}
+          lang={code}
+        >
+          {name}
+        </a>
+      ))}
+    </div>
+  </div>
+) : (
+  <div class="lang-selector" id="lang-selector">
+    <button 
+      class="lang-selector__trigger" 
+      aria-label={t('a11y.switchLanguage')}
+      aria-expanded="false"
+      type="button"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+      <span class="lang-selector__current">{languages[lang]}</span>
+      <svg class="lang-selector__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </button>
+    <div class="lang-selector__dropdown" role="menu">
+      {langEntries.map(([code, name]) => (
+        <a
+          href={`${base.replace(/\/$/, '')}/${code}${pathAfterLang === '/' ? '/' : pathAfterLang}`}
+          class:list={['lang-selector__option', { 'is-active': code === lang }]}
+          role="menuitem"
+          lang={code}
+        >
+          {name}
+        </a>
+      ))}
+    </div>
+  </div>
+)}
+
+<script>
+  const selector = document.getElementById('lang-selector');
+  if (selector) {
+    const trigger = selector.querySelector('.lang-selector__trigger');
+    const dropdown = selector.querySelector('.lang-selector__dropdown');
+    
+    trigger?.addEventListener('click', () => {
+      const isOpen = selector.classList.contains('is-open');
+      selector.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!selector.contains(e.target as Node)) {
+        selector.classList.remove('is-open');
+        trigger?.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        selector.classList.remove('is-open');
+        trigger?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>
+
+<style>
+  /* Default dropdown variant */
+  .lang-selector {
+    position: relative;
+  }
+
+  .lang-selector__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .lang-selector__trigger:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .lang-selector__chevron {
+    transition: transform var(--transition-fast);
+  }
+
+  .lang-selector.is-open .lang-selector__chevron {
+    transform: rotate(180deg);
+  }
+
+  .lang-selector__dropdown {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    inset-inline-end: 0;
+    min-width: 140px;
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+    z-index: var(--z-dropdown);
+  }
+
+  .lang-selector.is-open .lang-selector__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .lang-selector__option {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .lang-selector__option:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+
+  .lang-selector__option.is-active {
+    color: var(--color-primary-light);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Mobile variant */
+  .lang-selector-mobile__label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wider);
+    margin-bottom: var(--space-3);
+  }
+
+  .lang-selector-mobile__list {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .lang-selector-mobile__link {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    background: var(--color-surface);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    transition: all var(--transition-fast);
+  }
+
+  .lang-selector-mobile__link:hover {
+    border-color: var(--color-primary-light);
+    color: var(--color-primary-light);
+  }
+
+  .lang-selector-mobile__link.is-active {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-primary);
+  }
+
+  @media (max-width: 1024px) {
+    .lang-selector__current {
+      display: none;
+    }
+  }
+</style>

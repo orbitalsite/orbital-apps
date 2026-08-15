@@ -1,0 +1,388 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { useTranslations } from '@i18n/index';
+import { languages, type Lang } from '@i18n/languages';
+import Contact3DCanvas from '@components/contact/Contact3DCanvas.astro';
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const currentLang = (lang || 'ar') as Lang;
+const t = useTranslations(currentLang);
+---
+
+<PageLayout
+  title={t('contact.title')}
+  description={t('contact.description')}
+  lang={currentLang}
+  canonicalPath="/contact/"
+>
+  <div class="contact-page">
+    <!-- Hero Section (Safe clearance below 110px navbar) -->
+    <section class="contact-hero">
+      <div class="container">
+        <!-- Lightweight 3D Canvas -->
+        <Contact3DCanvas />
+        <div class="hero-badge">
+          <span>CONNECT WITH US</span>
+        </div>
+        <h1 class="hero-title">{t('contact.title')}</h1>
+        <div class="accent-line"></div>
+        <p class="subtitle">{t('contact.description')}</p>
+      </div>
+    </section>
+
+    <!-- Channels Section -->
+    <section class="contact-content">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- 1. Email Address -->
+          <div class="contact-card">
+            <div class="icon-wrapper email-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </div>
+            <h2>{t('contact.email')}</h2>
+            <p>{t('contact.emailDesc')}</p>
+            <a href="mailto:orbitaltechno897@gmail.com" class="contact-action-btn email-btn">
+              orbitaltechno897@gmail.com
+            </a>
+          </div>
+
+          <!-- 3. Facebook -->
+          <div class="contact-card">
+            <div class="icon-wrapper facebook-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </div>
+            <h2>{t('contact.facebook')}</h2>
+            <p>{t('contact.facebookDesc')}</p>
+            <a href="https://www.facebook.com/profile.php?id=61592549626527&locale" target="_blank" rel="noopener noreferrer" class="contact-action-btn facebook-btn">
+              {t('contact.visitSocial')}
+            </a>
+          </div>
+
+          <!-- 4. Instagram -->
+          <div class="contact-card">
+            <div class="icon-wrapper instagram-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </div>
+            <h2>{t('contact.instagram')}</h2>
+            <p>{t('contact.instagramDesc')}</p>
+            <a href="https://www.instagram.com/orbitaltechno897" target="_blank" rel="noopener noreferrer" class="contact-action-btn instagram-btn">
+              {t('contact.visitSocial')}
+            </a>
+          </div>
+
+          <!-- 5. TikTok -->
+          <div class="contact-card">
+            <div class="icon-wrapper tiktok-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.56-1.36 1.48-1.42 2.47-.14 1.43.67 2.87 1.92 3.49.91.45 2 .47 2.95.14 1.1-.38 1.97-1.3 2.26-2.42.17-.65.18-1.34.18-2.02V.02z"/>
+              </svg>
+            </div>
+            <h2>{t('contact.tiktok')}</h2>
+            <p>{t('contact.tiktokDesc')}</p>
+            <a href="https://www.tiktok.com/@orbital5432" target="_blank" rel="noopener noreferrer" class="contact-action-btn tiktok-btn">
+              {t('contact.visitSocial')}
+            </a>
+          </div>
+
+          <!-- 6. YouTube -->
+          <div class="contact-card">
+            <div class="icon-wrapper youtube-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </div>
+            <h2>{t('contact.youtube')}</h2>
+            <p>{t('contact.youtubeDesc')}</p>
+            <a href="https://www.youtube.com/@orbitaltech-p9b" target="_blank" rel="noopener noreferrer" class="contact-action-btn youtube-btn">
+              {t('contact.visitSocial')}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</PageLayout>
+
+<script>
+  import { gsap } from 'gsap';
+
+  function initContactAnimations() {
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) return;
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    // Hero entrance timeline
+    tl.from('.hero-badge', { scale: 0.8, opacity: 0, duration: 0.7, delay: 0.2 })
+      .from('.hero-title', { y: 40, opacity: 0, duration: 0.9 }, '-=0.4')
+      .from('.contact-hero .accent-line', { scaleX: 0, opacity: 0, duration: 0.8, transformOrigin: 'center' }, '-=0.5')
+      .from('.subtitle', { y: 30, opacity: 0, duration: 0.8 }, '-=0.4');
+
+    // Staggered Contact Cards
+    const cards = document.querySelectorAll('.contact-card');
+    if (cards.length > 0) {
+      gsap.from(cards, {
+        opacity: 0,
+        y: 50,
+        duration: 0.9,
+        stagger: 0.1,
+        delay: 0.3,
+        ease: 'power3.out',
+      });
+    }
+
+    // Micro-interactions on Hover
+    document.querySelectorAll('.contact-card').forEach((card) => {
+      const icon = card.querySelector('.icon-wrapper');
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, { y: -8, duration: 0.3, ease: 'power2.out' });
+        if (icon) gsap.to(icon, { scale: 1.15, rotation: 5, duration: 0.3, ease: 'back.out(1.7)' });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, { y: 0, duration: 0.3, ease: 'power2.out' });
+        if (icon) gsap.to(icon, { scale: 1, rotation: 0, duration: 0.3, ease: 'power2.out' });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initContactAnimations);
+  } else {
+    initContactAnimations();
+  }
+</script>
+
+<style>
+  .contact-page {
+    background: var(--color-background);
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  /* ── Hero Section (Cleared 140px below fixed navbar) ── */
+  .contact-hero {
+    padding-top: calc(var(--navbar-height) + var(--space-8));
+    padding-bottom: var(--space-12);
+    text-align: center;
+    background: linear-gradient(180deg, rgba(59, 139, 235, 0.05) 0%, transparent 100%);
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: var(--space-1) var(--space-4);
+    background: rgba(59, 139, 235, 0.1);
+    border: 1px solid rgba(59, 139, 235, 0.25);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-widest);
+    color: var(--color-primary-light);
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-title {
+    font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .accent-line {
+    width: 64px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary-light), var(--color-glow));
+    border-radius: var(--radius-full);
+    margin: 0 auto var(--space-6);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* ── Content Grid Section ── */
+  .contact-content {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-24);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .contact-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Contact Card Styling */
+  .contact-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .contact-card:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: 0 16px 36px rgba(59, 139, 235, 0.12), var(--shadow-md);
+  }
+
+  .icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-6);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Platform-specific brand colors */
+  .phone-icon {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+
+  .email-icon {
+    background: rgba(59, 139, 235, 0.1);
+    color: var(--color-primary-light);
+    border: 1px solid rgba(59, 139, 235, 0.25);
+  }
+
+  .facebook-icon {
+    background: rgba(24, 119, 242, 0.1);
+    color: #1877F2;
+    border: 1px solid rgba(24, 119, 242, 0.25);
+  }
+
+  .instagram-icon {
+    background: rgba(225, 48, 108, 0.1);
+    color: #E1306C;
+    border: 1px solid rgba(225, 48, 108, 0.25);
+  }
+
+  .tiktok-icon {
+    background: rgba(254, 44, 85, 0.1);
+    color: #FE2C55;
+    border: 1px solid rgba(254, 44, 85, 0.25);
+  }
+
+  .youtube-icon {
+    background: rgba(255, 0, 0, 0.1);
+    color: #FF0000;
+    border: 1px solid rgba(255, 0, 0, 0.25);
+  }
+
+  .contact-card h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+
+  .contact-card p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-relaxed);
+    margin: 0 0 var(--space-6);
+    flex-grow: 1;
+  }
+
+  /* Action Buttons */
+  .contact-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+  }
+
+  .contact-action-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  .phone-btn {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .email-btn {
+    background: rgba(59, 139, 235, 0.15);
+    color: var(--color-primary-light);
+    border: 1px solid rgba(59, 139, 235, 0.3);
+  }
+
+  .facebook-btn {
+    background: #1877F2;
+    color: #ffffff;
+  }
+
+  .instagram-btn {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: #ffffff;
+  }
+
+  .tiktok-btn {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  :global([data-theme="light"]) .tiktok-btn {
+    background: #111827;
+  }
+
+  .youtube-btn {
+    background: #FF0000;
+    color: #ffffff;
+  }
+</style>

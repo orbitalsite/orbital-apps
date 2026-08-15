@@ -1,0 +1,554 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { useTranslations, getLocalizedPath } from '@i18n/index';
+import { languages, type Lang } from '@i18n/languages';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL;
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  const langs = Object.keys(languages);
+  return langs.flatMap(lang => 
+    products.map(product => ({
+      params: { lang, slug: product.data.slug },
+      props: { product },
+    }))
+  );
+}
+
+const { lang } = Astro.params;
+const { product } = Astro.props;
+const currentLang = (lang || 'ar') as Lang;
+const trans = product.data.translations[currentLang] || product.data.translations['en'];
+const t = useTranslations(currentLang);
+
+const programsUrl = `${base.replace(/\/$/, '')}${getLocalizedPath(currentLang, '/programs/')}`;
+const homeUrl = `${base.replace(/\/$/, '')}${getLocalizedPath(currentLang, '/')}`;
+---
+
+<PageLayout title={trans.name} description={trans.description} lang={currentLang}>
+  <div class="program-detail">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href={homeUrl}>{t('nav.home') || 'Home'}</a>
+        <span class="separator">/</span>
+        <a href={programsUrl}>{t('nav.programs') || 'Programs'}</a>
+        <span class="separator">/</span>
+        <span class="current">{trans.name}</span>
+      </nav>
+
+      <header class="product-header">
+        <div class="header-content">
+          <div class="icon-placeholder-large">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="4" />
+              <path d="M12 7v10" />
+              <path d="M7 12h10" />
+            </svg>
+          </div>
+          <div class="product-info">
+            <h1>{trans.name}</h1>
+            <p class="short-desc">{trans.description}</p>
+            <div class="meta-tags">
+              {product.data.version && <span class="tag version">v{product.data.version}</span>}
+              {product.data.platforms && (
+                <span class="tag platform">{product.data.platforms.join(', ')}</span>
+              )}
+              {product.data.free ? (
+                <span class="tag free">{t('programs.free') || 'مجاني 100%'}</span>
+              ) : (
+                <span class="tag paid">{t('programs.paid') || 'Paid'}</span>
+              )}
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href={product.data.downloadUrl} class="download-btn">
+            {t('programs.download') || 'Download Now'}
+          </a>
+        </div>
+      </header>
+
+      {product.data.images && product.data.images.length > 0 && (
+        <section class="product-slider-section">
+          <div class="slider-wrapper">
+            <div class="slider-container" id="productSlider">
+              {product.data.images.map((img: string, index: number) => (
+                <div class="slide" data-index={index}>
+                  <img src={`${base.replace(/\/$/, '')}${img}`} alt={`${trans.name} screenshot ${index + 1}`} class="slide-img" />
+                </div>
+              ))}
+            </div>
+            
+            {product.data.images.length > 1 && (
+              <>
+                <button class="slider-btn prev-btn" aria-label="Previous image" id="sliderPrev">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button class="slider-btn next-btn" aria-label="Next image" id="sliderNext">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <div class="slider-dots" id="sliderDots">
+                  {product.data.images.map((_: string, idx: number) => (
+                    <button class={`dot ${idx === 0 ? 'active' : ''}`} data-index={idx} aria-label={`Go to slide ${idx + 1}`}></button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+      )}
+
+      <main class="product-body">
+        {trans.longDescription && (
+          <section class="section about">
+            <h2>حول البرنامج</h2>
+            <div class="content">
+              <p>{trans.longDescription}</p>
+            </div>
+          </section>
+        )}
+
+        {trans.features && trans.features.length > 0 && (
+          <section class="section features">
+            <h2>الميزات الرئيسية</h2>
+            <ul class="feature-list">
+              {trans.features.map((feat: string) => (
+                <li>{feat}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {trans.requirements && trans.requirements.length > 0 && (
+          <section class="section requirements">
+            <h2>متطلبات التشغيل والنظام</h2>
+            <ul class="requirement-list">
+              {trans.requirements.map((req: string) => (
+                <li>{req}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {trans.changelog && (
+          <section class="section changelog">
+            <h2>سجل الاصدارات والتحديثات</h2>
+            <p>{trans.changelog}</p>
+          </section>
+        )}
+
+        <section class="section download-cta">
+          <div class="cta-card">
+            <h2>تحميل {trans.name}</h2>
+            <a href={product.data.downloadUrl} class="download-btn large">
+              تنزيل {product.data.version ? 'الإصدار v' + product.data.version : ''}
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</PageLayout>
+
+<style>
+  .program-detail {
+    padding-top: calc(var(--navbar-height) + var(--space-8));
+    padding-bottom: var(--space-24);
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-primary-light);
+  }
+
+  .breadcrumb .separator {
+    color: var(--color-text-subtle);
+  }
+
+  .breadcrumb .current {
+    color: var(--color-text);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-6);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-12);
+  }
+
+  .header-content {
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-start;
+  }
+
+  .icon-placeholder-large {
+    width: 80px;
+    height: 80px;
+    background: rgba(59, 139, 235, 0.1);
+    border: 1px solid rgba(59, 139, 235, 0.25);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary-light);
+    flex-shrink: 0;
+  }
+
+  .product-info h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .short-desc {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .meta-tags {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .tag.version {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+  }
+
+  .tag.platform {
+    background: rgba(59, 139, 235, 0.1);
+    color: var(--color-primary-light);
+  }
+
+  .tag.free {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-success);
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+    color: #ffffff;
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(59, 139, 235, 0.3);
+  }
+
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 139, 235, 0.4);
+  }
+
+  .download-btn.large {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-lg);
+  }
+
+  .product-slider-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .slider-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    background: var(--color-surface);
+  }
+
+  .slider-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .slider-container::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .slide {
+    flex: 0 0 100%;
+    width: 100%;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f1219; /* Darker bg for images */
+  }
+
+  .slide-img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(15, 18, 25, 0.6);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, transform 0.2s;
+    z-index: 10;
+  }
+
+  .slider-btn:hover {
+    background: rgba(59, 139, 235, 0.8);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .prev-btn {
+    inset-inline-start: var(--space-4);
+  }
+
+  .next-btn {
+    inset-inline-end: var(--space-4);
+  }
+
+  .slider-dots {
+    position: absolute;
+    bottom: var(--space-4);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-2);
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.4);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    backdrop-filter: blur(4px);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    padding: 0;
+  }
+
+  .dot:hover {
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .dot.active {
+    background: var(--color-primary-light);
+    transform: scale(1.2);
+  }
+
+  .product-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .section h2 {
+    font-size: var(--font-size-2xl);
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
+  }
+
+  .section p {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .feature-list, .requirement-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .feature-list li, .requirement-list li {
+    padding-inline-start: var(--space-6);
+    position: relative;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .feature-list li::before {
+    content: "✓";
+    position: absolute;
+    inset-inline-start: 0;
+    color: var(--color-success);
+    font-weight: bold;
+  }
+
+  .requirement-list li::before {
+    content: "•";
+    position: absolute;
+    inset-inline-start: 0;
+    color: var(--color-primary-light);
+    font-weight: bold;
+  }
+
+  .cta-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  @media (max-width: 768px) {
+    .product-header {
+      flex-direction: column;
+    }
+    .header-content {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  function initSlider() {
+    const container = document.getElementById('productSlider');
+    const prevBtn = document.getElementById('sliderPrev');
+    const nextBtn = document.getElementById('sliderNext');
+    const dots = document.querySelectorAll('#sliderDots .dot');
+    
+    if (!container) return;
+
+    const updateDots = () => {
+      if (!dots.length) return;
+      const scrollLeft = container.scrollLeft;
+      const slideWidth = container.clientWidth;
+      // Depending on RTL/LTR, scrollLeft might be negative or work differently,
+      // but standard scrollLeft / width usually gets the index.
+      const index = Math.round(Math.abs(scrollLeft) / slideWidth);
+      
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    };
+
+    container.addEventListener('scroll', () => {
+      // Use requestAnimationFrame to throttle dot updates
+      window.requestAnimationFrame(updateDots);
+    });
+
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', () => {
+        const slideWidth = container.clientWidth;
+        // Check RTL direction
+        const isRTL = document.documentElement.dir === 'rtl';
+        if (isRTL) {
+           container.scrollBy({ left: slideWidth, behavior: 'smooth' });
+        } else {
+           container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        const slideWidth = container.clientWidth;
+        const isRTL = document.documentElement.dir === 'rtl';
+        if (isRTL) {
+           container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
+        } else {
+           container.scrollBy({ left: slideWidth, behavior: 'smooth' });
+        }
+      });
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        const slideWidth = container.clientWidth;
+        const isRTL = document.documentElement.dir === 'rtl';
+        // Calculate target scroll based on index
+        let targetScroll = i * slideWidth;
+        if (isRTL) {
+          // In RTL, standard scrollLeft goes negative or right-to-left
+          targetScroll = -targetScroll;
+        }
+        
+        container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      });
+    });
+    
+    // Initial dot update just in case
+    setTimeout(updateDots, 100);
+  }
+
+  // Initialize on load and Astro page transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSlider);
+  } else {
+    initSlider();
+  }
+  document.addEventListener('astro:page-load', initSlider);
+</script>

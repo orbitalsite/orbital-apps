@@ -1,0 +1,79 @@
+---
+/**
+ * ORBITAL — SEO Head Component
+ * Renders all SEO meta tags, Open Graph, Twitter, and hreflang tags.
+ */
+import { languages } from '@i18n/languages';
+import { siteConfig } from '@data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: string;
+  canonicalPath?: string;
+  ogImage?: string;
+  type?: 'website' | 'article';
+  publishedAt?: string;
+}
+
+const {
+  title,
+  description,
+  lang,
+  canonicalPath = '',
+  ogImage = '/images/logo.png',
+  type = 'website',
+  publishedAt,
+} = Astro.props;
+
+const fullTitle = title === 'ORBITAL' ? title : `${title} | ORBITAL`;
+const baseUrl = siteConfig.url;
+const base = siteConfig.base;
+const canonicalUrl = `${baseUrl}${base}/${lang}${canonicalPath}`;
+const ogImageUrl = `${baseUrl}${base}${ogImage}`;
+
+const langEntries = Object.keys(languages) as Array<keyof typeof languages>;
+---
+
+<!-- Primary Meta Tags -->
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<meta name="generator" content={Astro.generator} />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+
+<!-- Canonical -->
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Hreflang -->
+{langEntries.map((l) => (
+  <link rel="alternate" hreflang={l} href={`${baseUrl}${base}/${l}${canonicalPath}`} />
+))}
+<link rel="alternate" hreflang="x-default" href={`${baseUrl}${base}/ar${canonicalPath}`} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:site_name" content="ORBITAL" />
+<meta property="og:locale" content={lang} />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+{publishedAt && (
+  <meta property="article:published_time" content={publishedAt} />
+)}
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href={`${base}/images/hlogo.png`} />
+<link rel="apple-touch-icon" href={`${base}/images/hlogo.png`} />
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#0A0E17" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />

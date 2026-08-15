@@ -1,0 +1,76 @@
+---
+import type { Lang } from '@i18n/languages';
+import { useTranslations } from '@i18n/index';
+
+export interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="trust-section">
+  <div class="container">
+    <div class="trust-content" data-animate="up">
+      <div class="line"></div>
+      <p class="statement">
+        {t('sections.trust.statement')}
+      </p>
+      <div class="line"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-inline: var(--space-6);
+  }
+
+  .trust-section {
+    padding-block: var(--space-12);
+    background-color: var(--color-background);
+  }
+
+  .trust-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-6);
+    max-width: 840px;
+    margin-inline: auto;
+  }
+
+  .line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary-light), var(--color-glow));
+  }
+
+  .statement {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    line-height: var(--line-height-relaxed);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .statement {
+      font-size: var(--font-size-2xl);
+    }
+    
+    .trust-content {
+      flex-direction: row;
+      text-align: start;
+    }
+    
+    .line {
+      width: 2px;
+      height: 60px;
+    }
+  }
+</style>
